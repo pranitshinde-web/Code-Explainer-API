@@ -8,7 +8,6 @@ from services.gemini_service import GeminiService
 from utils.logger import log_info
 from auth.jwt_handler import verify_access_token
 from services.extract_json import extract_json
-import json
 
 router = APIRouter(prefix="/improve", tags=["Improve Code"])
 
