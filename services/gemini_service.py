@@ -8,7 +8,6 @@ from config import settings
 
 
 class GeminiService:
-
     def __init__(self):
         genai.configure(api_key=settings.GEMINI_API_KEY)
         self.model = genai.GenerativeModel("models/gemini-2.0-flash")
@@ -35,11 +34,17 @@ class GeminiService:
             log_error(f"GeminiService explain_code Exception: {str(e)}")
             raise RuntimeError("Failed to generate explanation")
 
-    async def suggest_improvements(self, code: str, target: str) -> str:
+    async def suggest_improvements(self, code: str,lang:str) -> str:
         try:
+            from ai.prompts.base_prompt import SYSTEM_ROLE, JSON_INSTRUCTIONS
+            from ai.prompts.improve_prompt import FEW_SHOT_EXAMPLE
+
             prompt = IMPROVE_PROMPT_TEMPLATE.format(
+                system_role=SYSTEM_ROLE,
+                json_instructions=JSON_INSTRUCTIONS,
+                few_shot_example=FEW_SHOT_EXAMPLE,
                 code=code,
-                area=target
+                lang=lang
             )
 
             log_info("Sending improve prompt to Gemini")

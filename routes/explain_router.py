@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from models.requests import ExplainCodeRequest
 from models.responses import CodeExplanationResponse
 from models.errors import ErrorResponse
@@ -23,10 +23,17 @@ def get_current_user(token: str = Depends(verify_access_token)):
     response_model=CodeExplanationResponse,
     responses={400: {"model": ErrorResponse}}
 )
-async def explain_code(req: ExplainCodeRequest, user=Depends(get_current_user)):
+async def explain_code(
+    code: str = Body(..., media_type="text/plain"),
+    language: str | None = None,
+    user=Depends(get_current_user)
+):
     """
     Explain code in simple terms.
     """
+    # Convert to your Pydantic model manually
+    req = ExplainCodeRequest(code=code, language=language)
+
     log_info("Received explain request")
     gemini_service = GeminiService()
 
@@ -43,10 +50,7 @@ async def explain_code(req: ExplainCodeRequest, user=Depends(get_current_user)):
         lang=detected_lang,
     )
 
-    # -----------------------------------------
-    # Step 4: Extract valid JSON from model output
-    # -----------------------------------------
-
+    # (Your existing JSON extraction logic)
     match = re.search(r"\{(.|\n)*\}", raw_output)
     if not match:
         raise HTTPException(
@@ -62,9 +66,6 @@ async def explain_code(req: ExplainCodeRequest, user=Depends(get_current_user)):
             detail="Failed to parse JSON returned by Gemini."
         )
 
-    # -----------------------------------------
-    # Step 5: Return structured validated output
-    # -----------------------------------------
     return CodeExplanationResponse(
         language=parsed.get("language", detected_lang),
         high_level_explanation=parsed.get("high_level_explanation", ""),

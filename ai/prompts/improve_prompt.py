@@ -10,33 +10,33 @@ for i in range(len(items)):
     print(items[i])
 
 EXPECTED_OUTPUT:
-{
+{{
   "language": "python",
   "improvements": "Loop can be simplified using direct iteration.",
   "optimized_code": "for item in items:\\n    print(item)"
-}
+}}
 """
 
-IMPROVE_PROMPT_TEMPLATE = f"""
-{SYSTEM_ROLE}
+IMPROVE_PROMPT_TEMPLATE = """
+{system_role}
 
-Your task: Suggest improvements for the provided code.
+Your task: Suggest improvements for the provided code.  
 Focus on readability, optimization, best practices, and performance.
 
-{JSON_INSTRUCTIONS}
+IMPORTANT RULES:
+- Respond ONLY with valid JSON.
+- Do NOT include any text outside the JSON.
+- Do NOT include markdown.
+- Do NOT wrap JSON in code fences.
+- Output MUST be a single JSON object.
 
-Use this JSON structure:
-{{
-  "language": "",
-  "improvements": "",
-  "optimized_code": ""
-}}
+{json_instructions}
 
 FEW_SHOT_EXAMPLE:
-{FEW_SHOT_EXAMPLE}
+{few_shot_example}
 
 Now improve the following code:
 
 CODE_INPUT:
-\"\"\"{{code}}\"\"\"
+\"\"\"{code}\"\"\"
 """
