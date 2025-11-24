@@ -1,0 +1,29 @@
+# --- Python ---
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Environment Variables ---
+.env
+
+# --- Logs ---
+logs/
+*.log
+
+# --- IDE Files ---
+.vscode/
+.idea/
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Packaging ---
+dist/
+build/
+*.egg-info/
+
+# --- Node (if frontend exists) ---
+node_modules/
