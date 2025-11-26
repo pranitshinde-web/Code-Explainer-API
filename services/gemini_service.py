@@ -1,5 +1,4 @@
 # services/gemini_service.py
-
 import google.generativeai as genai
 from utils.logger import log_info, log_error
 from ai.prompts.explain_prompt import EXPLAIN_PROMPT_TEMPLATE

@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "username": "pranit",
+      "password_hash": "$2b$12$VdGosJurVcjvx92AN6jmFu7KXma13MTzSDLWPYnoBgdc./o.IimSe",
+      "created_at": 1764147632
+    },
+    {
+      "username": "standard_user",
+      "password_hash": "$2b$12$vfoboQ/TxDZ3HRkUNrkzUuXgM5I4OJYcGZC78.FY3cFk6PNmgA4di",
+      "created_at": 1764149143
+    },
+    {
+      "username": "rohan",
+      "password_hash": "$2b$12$YTJZ/3oU/MLWyKREJpu1bu8RPiM0dHJEAmQoD95wni3h.R7mPCLni",
+      "created_at": "2025-11-26T09:50:49.189746Z"
+    }
+  ],
+  "refresh_tokens": []
+}
