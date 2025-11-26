@@ -1,25 +1,34 @@
+import json
+import re
+from utils.logger import log_error
+
 def extract_json(text: str):
     """
-    Extract the first valid JSON object from a string.
-    This method is robust against markdown, code fences, and extra text.
+    Robustly extract JSON from LLM output using Regex.
+    Handles Markdown fences and messy pre/post text.
     """
-    import json
+    try:
+        # 1. Attempt to clean markdown code fences (```json ... ```)
+        cleaned_text = re.sub(r"^```json\s*", "", text, flags=re.MULTILINE)
+        cleaned_text = re.sub(r"^```\s*", "", cleaned_text, flags=re.MULTILINE)
+        cleaned_text = re.sub(r"```$", "", cleaned_text, flags=re.MULTILINE)
 
-    stack = 0
-    start = None
+        # 2. Find the first outer-most curly brace structure
+        # This regex looks for a { followed by anything, ending with a }
+        # re.DOTALL allows matching across newlines
+        match = re.search(r"(\{.*\})", cleaned_text, re.DOTALL)
+        
+        if not match:
+            log_error(f"No JSON structure found in text: {text[:100]}...")
+            return None
 
-    for i, char in enumerate(text):
-        if char == '{':
-            if stack == 0:
-                start = i
-            stack += 1
-        elif char == '}':
-            stack -= 1
-            if stack == 0 and start is not None:
-                candidate = text[start:i + 1]
-                try:
-                    return json.loads(candidate)  # success!
-                except json.JSONDecodeError:
-                    continue
+        candidate = match.group(1)
+        
+        return json.loads(candidate)
 
-    return None
+    except json.JSONDecodeError as e:
+        log_error(f"JSON Decode Error: {str(e)} | Input: {text[:100]}...")
+        return None
+    except Exception as e:
+        log_error(f"JSON Extraction Error: {str(e)}")
+        return None
